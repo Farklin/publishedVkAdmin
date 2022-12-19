@@ -12,7 +12,8 @@
         "laravel/framework": "^9.19",
         "laravel/nova": "*",
         "laravel/sanctum": "^3.0",
-        "laravel/tinker": "^2.7"
+        "laravel/tinker": "^2.7",
+        "simplehtmldom/simplehtmldom": "^2.0@RC"
     },
     "require-dev": {
         "fakerphp/faker": "^1.9.1",
