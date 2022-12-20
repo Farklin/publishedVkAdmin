@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class Post extends Model
 {
     use HasFactory;
-    protected $connection='sqlite_publishedVk'; 
+    //protected $connection='sqlite_publishedVk'; 
     protected $table = 'posts';
-    public $timestamps = false;
+    //public $timestamps = false;
 }

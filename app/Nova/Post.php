@@ -50,10 +50,10 @@ class Post extends Resource
             ID::make()->sortable(),
             Text::make('Заголовок','title'),
             Textarea::make('Описание', 'description'),
-            Text::make('Сайт', 'site'),
+            Text::make('Сайт', 'url'),
             ExternalImage::make('image')->default(''), 
-            Text::make('Дата публикации','date_published'),
-            Boolean::make('Статус размещения', 'published'), 
+            //Text::make('Дата публикации','date_published'),
+            Boolean::make('Статус размещения', 'status'), 
         ];
     }
 
