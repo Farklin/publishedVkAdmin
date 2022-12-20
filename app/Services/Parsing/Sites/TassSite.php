@@ -10,11 +10,10 @@ class TassSite extends Site
 
     public function getDescription()
     {   
-
+        $this->description = ''; 
         foreach($this->responce->find('article p') as $paragraph)
         {
             $this->description .= $paragraph->plaintext . '\n\n'; 
         }
-        return $this->description;
     }
 }

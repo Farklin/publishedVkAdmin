@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PublishedVkController;
+use App\Services\Vk\VkApi;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,5 +16,12 @@ use Illuminate\Support\Facades\Route;
 */
 
 Route::get('/', function () {
-    return view('welcome');
+
+    // $image = $_SERVER['DOCUMENT_ROOT'] . '/images/test.jpg'; 
+    // $test = new VkApi(); 
+    // $uploadImage = $test->getStorage(); 
+    // $photoId =  $test->loadImage($uploadImage,$image);
+    // return $test->createPost('тест',$photoId ); 
+    $controller = new PublishedVkController(); 
+    $controller->index(); 
 });

@@ -61,6 +61,7 @@ class Site implements SiteInterface
 
     public function searchDescription($selector)
     {
+        $this->description = ''; 
         foreach($this->responce->find($selector) as $paragraph)
         {
             $this->description .= $paragraph->plaintext . '\n\n'; 

@@ -31,10 +31,11 @@ class ParsingService
                 {
                    if($site->getHost() == $parse['host'])
                    {    
-                        sleep(5); 
+                        sleep(3); 
                         $site->getPageContent($href->href);
                         $site->getTitle(); 
                         $site->getDescription(); 
+                        $site->getImage(); 
 
                         foreach($site->words as $word)
                         {
@@ -52,7 +53,6 @@ class ParsingService
                                     $post->date = $site->date; 
                                     $post->save(); 
                                 }
-                            
                             }
                         }
                         //$masResult[] = $site->getTitle(); 
@@ -62,6 +62,7 @@ class ParsingService
             }
             
         }
+
         if(empty($masResult))
         {
             return $mas; 
