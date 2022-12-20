@@ -13,7 +13,7 @@ class TassSite extends Site
         $this->description = ''; 
         foreach($this->responce->find('article p') as $paragraph)
         {
-            $this->description .= $paragraph->plaintext . '\n\n'; 
+            $this->description .= $paragraph->plaintext . "\n\n"; 
         }
     }
 }

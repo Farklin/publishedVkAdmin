@@ -11,8 +11,8 @@ class PublishedVkController extends Controller
 {
     public function index() 
     {
-        // $parsing = new ParsingService();
-        // $parsing->start();
+        $parsing = new ParsingService();
+        $parsing->start();
 
         $posts = Post::where('status', 0)->get();
 
