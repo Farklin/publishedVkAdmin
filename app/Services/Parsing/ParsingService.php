@@ -2,6 +2,7 @@
 
 namespace App\Services\Parsing;
 
+use App\Jobs\ProcessParsingSite;
 use App\Models\Post;
 use App\Services\Parsing\Sites\LentaSite;
 use App\Services\Parsing\Sites\RiaSite;
@@ -21,7 +22,7 @@ class ParsingService
             new TassSite(), 
             new LentaSite() 
         ];
-        $mas = []; 
+
         foreach($html->find('p a') as $href) 
         { 
             $parse = parse_url($href->href);
@@ -31,44 +32,11 @@ class ParsingService
                 {
                    if($site->getHost() == $parse['host'])
                    {    
-                        sleep(3); 
-                        $site->getPageContent($href->href);
-                        $site->getTitle(); 
-                        $site->getDescription(); 
-                        $site->getImage(); 
-
-                        foreach($site->words as $word)
-                        {
-                            if(strpos($site->description, $word) !== false)
-                            {
-                                if(!Post::where('url', $site->url)->exists())
-                                {
-                                    $masResult[] = $site->url; 
-                                    $post = new Post();
-                                    $post->title = $site->title;
-                                    $post->description = $site->description;
-                                    $post->image = $site->image;
-                                    $post->url = $site->url;
-                                    $post->status = 0;
-                                    $post->date = $site->date; 
-                                    $post->save(); 
-                                }
-                            }
-                        }
-                        //$masResult[] = $site->getTitle(); 
+                        ProcessParsingSite::dispatch($href, $site);
                    }
                 }
-                $mas[] = $href->href; 
             }
-            
         }
-
-        if(empty($masResult))
-        {
-            return $mas; 
-        }
-        // Returns the page title
-        return $masResult;
 
     }
 }

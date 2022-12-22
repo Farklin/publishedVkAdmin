@@ -23,5 +23,6 @@ Route::get('/', function () {
     // $photoId =  $test->loadImage($uploadImage,$image);
     // return $test->createPost('тест',$photoId ); 
     $controller = new PublishedVkController(); 
-    $controller->index(); 
+    $controller->index();
+    return 'Задачи поставлены в очередь';
 });
