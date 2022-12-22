@@ -11,4 +11,8 @@ class Post extends Model
     //protected $connection='sqlite_publishedVk'; 
     protected $table = 'posts';
     //public $timestamps = false;
+
+    public function vk() {
+        return $this->belongsTo(PostVk::class); 
+    }
 }

@@ -71,11 +71,14 @@ class ProcessPublishedVk implements ShouldQueue
         $message = $this->post->description . "\n\n" . implode(' ', $hashtags); 
         
         // публикуем пост 
-            
+        //$postVk = new PostVk(); 
+        
+        
         $vkApi->publishedPost($message, $img); 
         // изменяем статус публикации в базе данных 
         $this->post->status = true;
         
+
         $this->post->save();  
         if(!empty($img))
         {   
