@@ -4,6 +4,7 @@ namespace App\Jobs;
 
 use App\Models\Hashtag;
 use App\Models\Post;
+use App\Models\VkPost;
 use App\Services\Vk\VkApi;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -52,7 +53,7 @@ class ProcessPublishedVk implements ShouldQueue
         // найти хештеги
         $hashtags = []; 
 
-        foreach(Hashtag::where('status', 1)->get() as $itemHashtag)
+        foreach(Hashtag::where('active', 1)->get() as $itemHashtag)
         {
             foreach(explode(',', $itemHashtag->words) as $hashtag)
             {
@@ -72,14 +73,19 @@ class ProcessPublishedVk implements ShouldQueue
         
         // публикуем пост 
         //$postVk = new PostVk(); 
+       
         
+        $vk_post_id = $vkApi->publishedPost($message, $img)['response']['post_id'];
         
-        $vkApi->publishedPost($message, $img); 
         // изменяем статус публикации в базе данных 
-        $this->post->status = true;
-        
-
+        $this->post->status = 1;
         $this->post->save();  
+
+        $this->post->vk()->create([
+            'post_id' => $this->post->id, 
+            'vk_post_id' => $vk_post_id,
+        ]);
+
         if(!empty($img))
         {   
             // удаляем картинку 

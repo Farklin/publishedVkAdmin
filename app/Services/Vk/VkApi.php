@@ -3,6 +3,7 @@
 namespace App\Services\Vk;
 
 use CURLFile;
+use Illuminate\Support\Facades\Log;
 
 class VkApi
 {
@@ -121,6 +122,8 @@ class VkApi
         $response = curl_exec($curl);
         curl_close($curl);
         $result = json_decode($response, true);
+
+        Log::info($result ); 
         return $result; 
 
     }

@@ -13,6 +13,6 @@ class Post extends Model
     //public $timestamps = false;
 
     public function vk() {
-        return $this->belongsTo(PostVk::class); 
+        return $this->belongsTo(VkPost::class); 
     }
 }

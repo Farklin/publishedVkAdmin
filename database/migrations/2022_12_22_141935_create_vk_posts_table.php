@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('vk_posts', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')->references('id')->on('posts')->onDelete('cascade');
+            $table->foreignId('post_id')->references('id')->on('posts')->onDelete('cascade')->nullable();
             $table->integer('vk_post_id')->nullable();
             $table->integer('likes')->nullable();
             $table->integer('reposts')->nullable();

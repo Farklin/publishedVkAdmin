@@ -8,4 +8,7 @@ use Illuminate\Database\Eloquent\Model;
 class VkPost extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['post_id','vk_post_id', 'likes', 'reposts'];
+
 }
