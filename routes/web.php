@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PublishedVkController;
+use App\Models\SiteSetting;
 use App\Services\Parsing\Sites\Site;
 use App\Services\Vk\VkApi;
 use Illuminate\Http\Request;
@@ -31,13 +32,31 @@ Route::get('/par', function () {
 });
 
 Route::post('/par/test/start', function (Request $request) {
-    $site = new Site(); 
-    $site->getPageContent($request->input('url')); 
-    $data['form'] = $request->all(); 
-    $data['result']['title'] = $site->getCustom($request->input('title'), ''); 
-    $data['result']['description'] = $site->getCustom($request->input('description')); 
-    $data['result']['image'] = $site->getCustom($request->input('image'), ''); 
-    $data['result']['date'] = $site->getCustom($request->input('date')); 
+    $data = [] ;
+    if($request->input('action') == 'start')
+    {
+        $site = new Site(); 
+        $site->getPageContent($request->input('url')); 
+        $data['form'] = $request->all();
+        $data['form']['site'] =  parse_url($request->input('url'))['host'] ;
+        $data['result']['site'] = parse_url($request->input('url'))['host'];
+        $data['result']['title'] = $site->getCustom($request->input('title'), ''); 
+        $data['result']['description'] = $site->getCustom($request->input('description')); 
+        $data['result']['image'] = $site->getCustom($request->input('image'), ''); 
+        $data['result']['date'] = $site->getCustom($request->input('date')); 
+    }
+    elseif($request->input('action') == 'save')
+    {
+        $siteSetting = new SiteSetting($request->all());
+        if(SiteSetting::where('site', $request->input('site'))->exists())
+        {
+            $siteSetting = SiteSetting::where('site', $request->input('site'))->first(); 
+            $siteSetting->update($request->all());
+        }
+        $siteSetting->save(); 
+        $data['form'] = $request->all(); 
+    }
+
 
     return view('parsing.index', compact('data')); 
 })->name('par.test.start');

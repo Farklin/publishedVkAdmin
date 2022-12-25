@@ -31,9 +31,19 @@
         
                 <div class="mb-3 row">
                     <div class="offset-sm-4 col-sm-8">
-                        <button type="submit" class="btn btn-primary">Начать парсинг</button>
+                        <button type="submit" class="btn btn-primary" name="action" value="start">Начать парсинг</button>
                     </div>
                 </div>
+
+                @if(!empty($data['result']['title']) and !empty($data['result']['description']))
+                <div class="row mt-5">
+                  <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary" name="action" value="save">Сохранить</button>
+                  </div>
+                </div>
+              
+                @endif
+
             </form>
         </div>
     </div>
@@ -52,14 +62,7 @@
       </div>
   
 
-    @if(!empty($data['result']['title']) and !empty($data['result']['description']))
-    <div class="row mt-5">
-      <div class="col-md-12">
-        <button type="button" class="btn btn-primary">Сохранить</button>
-      </div>
-    </div>
-  
-    @endif
+ 
     </div>
     
   </main>
