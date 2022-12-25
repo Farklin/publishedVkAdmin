@@ -4,6 +4,7 @@ namespace App\Services\Parsing;
 
 use App\Jobs\ProcessParsingSite;
 use App\Models\Post;
+use App\Models\SiteSetting;
 use App\Services\Parsing\Sites\LentaSite;
 use App\Services\Parsing\Sites\RiaSite;
 use App\Services\Parsing\Sites\TassSite;
@@ -17,11 +18,7 @@ class ParsingService
 
         $client = new HtmlWeb();
         $html = $client->load('https://idp-cs.net/news_cat_faier.php?N=1#main-tbl');
-        $sites = [
-            new RiaSite(), 
-            new TassSite(), 
-            new LentaSite() 
-        ];
+        $sites = SiteSetting::all(); 
 
         foreach($html->find('p a') as $href) 
         { 
@@ -30,7 +27,7 @@ class ParsingService
             {
                 foreach($sites as $site)
                 {
-                   if($site->getHost() == $parse['host'])
+                   if($site->site == $parse['host'])
                    {    
                         ProcessParsingSite::dispatch($href, $site);
                    }

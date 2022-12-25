@@ -37,12 +37,14 @@ class Site implements SiteInterface
     }
 
     public function getCustom($selector, $delimetr = "\n\n")
-    {   $content = ''; 
+    {   
+        $content = ''; 
         try{
             if(empty($selector))
             { 
                 return ''; 
             }
+     
             foreach($this->responce->find($selector) as $paragraph)
             {
                 if( isset($paragraph->src) )
@@ -51,6 +53,8 @@ class Site implements SiteInterface
                 }
                 $content .= $paragraph->plaintext . $delimetr; 
             }
+        
+           
             return $content; 
         }
         catch (Exception $e)

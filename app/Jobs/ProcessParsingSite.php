@@ -3,12 +3,14 @@
 namespace App\Jobs;
 
 use App\Models\Post;
+use App\Services\Parsing\Sites\Site;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProcessParsingSite implements ShouldQueue
 {
@@ -34,25 +36,35 @@ class ProcessParsingSite implements ShouldQueue
      */
     public function handle()
     {   
-        $this->site->getPageContent($this->href->href);
-        $this->site->getTitle(); 
-        $this->site->getDescription(); 
-        $this->site->getImage(); 
+        // Log::info('Начат парсинг сайта ' . $this->href);
+        $parsingSite = new Site(); 
+        $parsingSite->getPageContent($this->href->href); 
+      
+        $title = $parsingSite->getCustom($this->site->title, ''); 
+        // Log::info('Заголовок' .  $title );
 
-        foreach($this->site->words as $word)
+        $description = $parsingSite->getCustom($this->site->description); 
+        // Log::info('Описание' .  $description );
+        
+        $image = $parsingSite->getCustom($this->site->image); 
+        // Log::info('Изображение' .  $image );
+
+        $date =  $parsingSite->getCustom($this->site->date); 
+        // Log::info('Дата' .  $date );
+
+        foreach($parsingSite->words as $word)
         {
-            if(strpos($this->site->description, $word) !== false)
+            if(strpos($description, $word) !== false)
             {
-                if(!Post::where('url', $this->site->url)->exists())
+                if(!Post::where('url', $parsingSite->url)->exists())
                 {
-                    $masResult[] = $this->site->url; 
                     $post = new Post();
-                    $post->title = $this->site->title;
-                    $post->description = $this->site->description;
-                    $post->image = $this->site->image;
-                    $post->url = $this->site->url;
+                    $post->title = $title;
+                    $post->description = $description;
+                    $post->image = $image;
+                    $post->url = $parsingSite->url;
                     $post->status = 0;
-                    $post->date = $this->site->date; 
+                    $post->date = $date; 
                     $post->save(); 
                 }
             }
