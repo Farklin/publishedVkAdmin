@@ -1,7 +1,9 @@
 <?php
 
 use App\Http\Controllers\PublishedVkController;
+use App\Services\Parsing\Sites\Site;
 use App\Services\Vk\VkApi;
+use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -14,15 +16,34 @@ use Illuminate\Support\Facades\Route;
 | contains the "web" middleware group. Now create something great!
 |
 */
+// Route::middleware('auth')->group(
+//     function()
+//     {
+         
+//     }
+// );
 
-Route::get('/', function () {
+Route::get('/par', function () {
 
-    // $image = $_SERVER['DOCUMENT_ROOT'] . '/images/test.jpg'; 
-    // $test = new VkApi(); 
-    // $uploadImage = $test->getStorage(); 
-    // $photoId =  $test->loadImage($uploadImage,$image);
-    // return $test->createPost('тест',$photoId ); 
     $controller = new PublishedVkController(); 
     $controller->index();
     return 'Задачи поставлены в очередь';
+});
+
+Route::post('/par/test/start', function (Request $request) {
+    $site = new Site(); 
+    $site->getPageContent($request->input('url')); 
+    $data['form'] = $request->all(); 
+    $data['result']['title'] = $site->getCustom($request->input('title'), ''); 
+    $data['result']['description'] = $site->getCustom($request->input('description')); 
+    $data['result']['image'] = $site->getCustom($request->input('image'), ''); 
+    $data['result']['date'] = $site->getCustom($request->input('date')); 
+
+    return view('parsing.index', compact('data')); 
+})->name('par.test.start');
+
+Route::get('/par/test', function () {
+    $data = []; 
+
+    return view('parsing.index', compact('data')); 
 });

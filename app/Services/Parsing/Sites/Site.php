@@ -36,6 +36,30 @@ class Site implements SiteInterface
         $this->responce = $this->client->load($this->url);
     }
 
+    public function getCustom($selector, $delimetr = "\n\n")
+    {   $content = ''; 
+        try{
+            if(empty($selector))
+            { 
+                return ''; 
+            }
+            foreach($this->responce->find($selector) as $paragraph)
+            {
+                if( isset($paragraph->src) )
+                { 
+                    return $paragraph->src; 
+                }
+                $content .= $paragraph->plaintext . $delimetr; 
+            }
+            return $content; 
+        }
+        catch (Exception $e)
+        {   
+            return ''; 
+        }
+     
+    }
+
     public function getTitle()
     {
         try{
