@@ -33,8 +33,7 @@ Route::get('/par', function () {
 });
 
 Route::get('test', function () {
-    $tgIca = new TgIca();
-    return $tgIca->start('rian_ru');
+    return ParsingWord::pluck('word')->toArray(); 
 }); 
 
 Route::middleware('auth')->group(function(){
