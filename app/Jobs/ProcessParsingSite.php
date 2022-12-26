@@ -66,6 +66,8 @@ class ProcessParsingSite implements ShouldQueue
                     $post->status = 0;
                     $post->date = $date; 
                     $post->save(); 
+
+                    ProcessPublishedVk::dispatch($post);
                 }
             }
         }
