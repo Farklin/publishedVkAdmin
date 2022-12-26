@@ -2,6 +2,7 @@
 
 namespace App\Jobs;
 
+use App\Models\ParsingWord;
 use App\Models\Post;
 use App\Services\Parsing\Sites\Site;
 use Illuminate\Bus\Queueable;
@@ -52,7 +53,7 @@ class ProcessParsingSite implements ShouldQueue
         $date =  $parsingSite->getCustom($this->site->date); 
         // Log::info('Дата' .  $date );
 
-        foreach($parsingSite->words as $word)
+        foreach(ParsingWord::put('word')->get()->toArray() as $word)
         {
             if(strpos($description, $word) !== false)
             {
