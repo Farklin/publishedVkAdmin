@@ -53,7 +53,7 @@ class ProcessParsingSite implements ShouldQueue
         $date =  $parsingSite->getCustom($this->site->date); 
         // Log::info('Дата' .  $date );
 
-        foreach(ParsingWord::put('word')->get()->toArray() as $word)
+        foreach(ParsingWord::pluck('word')->get()->toArray() as $word)
         {
             if(strpos($description, $word) !== false)
             {
