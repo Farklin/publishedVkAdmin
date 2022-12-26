@@ -3,6 +3,7 @@
 use App\Http\Controllers\PublishedVkController;
 use App\Models\SiteSetting;
 use App\Services\Parsing\Sites\Site;
+use App\Services\Parsing\Telegram\TgIca;
 use App\Services\Vk\VkApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -30,6 +31,11 @@ Route::get('/par', function () {
     $controller->index();
     return 'Задачи поставлены в очередь';
 });
+
+Route::get('test', function () {
+    $tgIca = new TgIca();
+    return $tgIca->start('rian_ru');
+}); 
 
 Route::middleware('auth')->group(function(){
     Route::post('/par/test/start', function (Request $request) {

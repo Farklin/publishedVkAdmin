@@ -8,6 +8,7 @@
         "php": "^8.0.2",
         "chaseconey/nova-external-image": "^0.3.1",
         "coderello/laravel-nova-lang": "^2.0",
+        "danog/madelineproto": "^7.0",
         "guzzlehttp/guzzle": "^7.2",
         "laravel/framework": "^9.19",
         "laravel/nova": "*",
