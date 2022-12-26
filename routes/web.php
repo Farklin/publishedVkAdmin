@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\PublishedVkController;
+use App\Models\ParsingWord;
 use App\Models\SiteSetting;
 use App\Services\Parsing\Sites\Site;
 use App\Services\Parsing\Telegram\TgIca;
