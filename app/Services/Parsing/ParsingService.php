@@ -13,6 +13,8 @@ use simplehtmldom\HtmlWeb;
 
 class ParsingService
 {
+
+    // TODO: переделать логику работы
     public function start() 
     {
 
