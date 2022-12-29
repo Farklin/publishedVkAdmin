@@ -8,6 +8,7 @@ use App\Services\Parsing\Telegram\TgIca;
 use App\Services\Vk\VkApi;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
+use simplehtmldom\HtmlWeb;
 
 /*
 |--------------------------------------------------------------------------
@@ -38,6 +39,21 @@ Route::get('test', function () {
 }); 
 
 Route::middleware('auth')->group(function(){
+    Route::any('/par/site', function(Request $request){
+
+        if($request->isMethod('post'))
+        {
+
+            $html = new HtmlWeb(); 
+            $responce = $html->load($request->url); 
+            return dd($responce->copy_until('body'));
+
+        }
+
+
+        return view('parsing.site'); 
+    })->name('par.site');
+
     Route::post('/par/test/start', function (Request $request) {
         $data = [] ;
         if($request->input('action') == 'start')
