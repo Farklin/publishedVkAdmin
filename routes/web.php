@@ -41,16 +41,6 @@ Route::get('test', function () {
 Route::middleware('auth')->group(function(){
     Route::any('/par/site', function(Request $request){
 
-        if($request->isMethod('post'))
-        {
-
-            $html = new HtmlWeb(); 
-            $responce = $html->load($request->url); 
-            return dd($responce->copy_until('body'));
-
-        }
-
-
         return view('parsing.site'); 
     })->name('par.site');
 

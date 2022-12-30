@@ -18,7 +18,7 @@ class ProcessParsingSite implements ShouldQueue
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
 
     protected $site;
-    protected $href; 
+    protected $href;
     /**
      * Create a new job instance.
      *
@@ -36,39 +36,38 @@ class ProcessParsingSite implements ShouldQueue
      * @return void
      */
     public function handle()
-    {   
-        // Log::info('Начат парсинг сайта ' . $this->href);
-        $parsingSite = new Site(); 
-        $parsingSite->getPageContent($this->href->href); 
-      
-        $title = $parsingSite->getCustom($this->site->title, ''); 
-        // Log::info('Заголовок' .  $title );
+    {
+        if (!Post::where('url', $this->href)->exists()) {
+            // Log::info('Начат парсинг сайта ' . $this->href);
+            $parsingSite = new Site();
+            $parsingSite->getPageContent($this->href);
 
-        $description = $parsingSite->getCustom($this->site->description); 
-        // Log::info('Описание' .  $description );
-        
-        $image = $parsingSite->getCustom($this->site->image); 
-        // Log::info('Изображение' .  $image );
+            $title = $parsingSite->getCustom($this->site->title, '');
+            // Log::info('Заголовок' .  $title );
 
-        $date =  $parsingSite->getCustom($this->site->date); 
-        // Log::info('Дата' .  $date );
+            $description = $parsingSite->getCustom($this->site->description);
+            // Log::info('Описание' .  $description );
 
-        foreach(ParsingWord::pluck('word')->toArray() as $word)
-        {
-            if(strpos($description, $word) !== false)
-            {
-                if(!Post::where('url', $parsingSite->url)->exists())
-                {
-                    $post = new Post();
-                    $post->title = $title;
-                    $post->description = $description;
-                    $post->image = $image;
-                    $post->url = $parsingSite->url;
-                    $post->status = 0;
-                    $post->date = $date; 
-                    $post->save(); 
+            $image = $parsingSite->getCustom($this->site->image);
+            // Log::info('Изображение' .  $image );
 
-                    ProcessPublishedVk::dispatch($post);
+            $date =  $parsingSite->getCustom($this->site->date);
+            // Log::info('Дата' .  $date );
+
+            foreach (ParsingWord::pluck('word')->toArray() as $word) {
+                if (strpos($description, $word) !== false) {
+                    if (!Post::where('url', $parsingSite->url)->exists()) {
+                        $post = new Post();
+                        $post->title = $title;
+                        $post->description = $description;
+                        $post->image = $image;
+                        $post->url = $parsingSite->url;
+                        $post->status = 0;
+                        $post->date = $date;
+                        $post->save();
+
+                        ProcessPublishedVk::dispatch($post);
+                    }
                 }
             }
         }
