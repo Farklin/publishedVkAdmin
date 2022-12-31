@@ -27,8 +27,6 @@ class ParsingService
         
         foreach($parsingLink as $project) 
         {   
-            // получаем хост проекта 
-            $host = parse_url($project->url)['host'];
             // если формат html
             if($project->format == 'html')
             {
@@ -43,6 +41,8 @@ class ParsingService
             // передаем ссылки на парсиннг 
             foreach($links as $link)
             {   
+                // получаем хост проекта 
+                $host = parse_url($link)['host'];
                 //перебераем сайты и находим нужную настройку для парсинга 
                 foreach($sites as $site)
                 {

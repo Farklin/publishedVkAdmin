@@ -1,6 +1,8 @@
 <?php
 
 use App\Http\Controllers\PublishedVkController;
+use App\Http\Livewire\Parsing\ParsingLinks;
+use App\Models\ParsingLink;
 use App\Models\ParsingWord;
 use App\Models\SiteSetting;
 use App\Services\Parsing\Sites\Site;
@@ -39,10 +41,18 @@ Route::get('test', function () {
 }); 
 
 Route::middleware('auth')->group(function(){
-    Route::any('/par/site', function(Request $request){
+    Route::get('/par/links', ParsingLinks::class
+    )->name('par.links');
 
-        return view('parsing.site'); 
-    })->name('par.site');
+    Route::any('/par/link/update/{id}', function($id){
+        $parsingLink = ParsingLink::find($id); 
+        return view('parsing.site', compact('parsingLink')); 
+    })->name('par.link.update');
+
+    Route::any('/par/link/add', function(Request $request){
+        $parsingLink = new ParsingLink(); 
+        return view('parsing.site', compact('parsingLink')); 
+    })->name('par.link.add');
 
     Route::post('/par/test/start', function (Request $request) {
         $data = [] ;
