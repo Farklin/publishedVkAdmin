@@ -18,7 +18,7 @@ class VkApi
         $get = [
             'group_id' => $this->groupId, 
             'album_id' => $this->albumId , 
-            'access_token' => 'vk1.a.EwSI8b66TZEnwQEOkaPEC4_8sEy34ZAbd8Y-ZYlqt6f2N4inEDrZEH_g9dH62sSC-LTi7bERkvfWAM11cT1YaG7KD4CK4at0ml9hSRGjdgmOn2Bm9DsS5_f-d-ScSdlIGc5-f58mpn1kcyfqj_BAIwtaQuj5_2CFNoOoFFEwTsPijPOcfABVizxxqtVEWZTLWC9pSERRq5Z-MEAxDWCKxA' , 
+            'access_token' => env('VK_TOKEN'), 
             'v' => $this->version , 
         ];
 
@@ -71,7 +71,7 @@ class VkApi
             'hash' => $img_hash ,
             'photos_list' => $photos_list ,
             'server' => $server ,
-            'access_token' => 'vk1.a.EwSI8b66TZEnwQEOkaPEC4_8sEy34ZAbd8Y-ZYlqt6f2N4inEDrZEH_g9dH62sSC-LTi7bERkvfWAM11cT1YaG7KD4CK4at0ml9hSRGjdgmOn2Bm9DsS5_f-d-ScSdlIGc5-f58mpn1kcyfqj_BAIwtaQuj5_2CFNoOoFFEwTsPijPOcfABVizxxqtVEWZTLWC9pSERRq5Z-MEAxDWCKxA' , 
+            'access_token' => env('VK_TOKEN'), 
             'v' => '5.81' , 
         ];
         
@@ -99,7 +99,7 @@ class VkApi
             'owner_id' => '-' . $this->groupId , 
             'from_group' => '1' , 
             'message' => $message ,
-            'access_token' => 'vk1.a.EwSI8b66TZEnwQEOkaPEC4_8sEy34ZAbd8Y-ZYlqt6f2N4inEDrZEH_g9dH62sSC-LTi7bERkvfWAM11cT1YaG7KD4CK4at0ml9hSRGjdgmOn2Bm9DsS5_f-d-ScSdlIGc5-f58mpn1kcyfqj_BAIwtaQuj5_2CFNoOoFFEwTsPijPOcfABVizxxqtVEWZTLWC9pSERRq5Z-MEAxDWCKxA' , 
+            'access_token' => env('VK_TOKEN') , 
             'v' => '5.81' , 
         ];
 
@@ -140,6 +140,9 @@ class VkApi
         return $vkApi->createPost($message ,$photoId); 
     }
 
+
+    // TODO: Доделать загрузку видео
+    // TODO: Получить доступ загрузки видео, токен вк 
     public function loadVideo($url)
     {
 
@@ -168,7 +171,7 @@ class VkApi
 
         $ch = curl_init();
         $parameters = http_build_query([
-            'access_token' => 'vk1.a.EwSI8b66TZEnwQEOkaPEC4_8sEy34ZAbd8Y-ZYlqt6f2N4inEDrZEH_g9dH62sSC-LTi7bERkvfWAM11cT1YaG7KD4CK4at0ml9hSRGjdgmOn2Bm9DsS5_f-d-ScSdlIGc5-f58mpn1kcyfqj_BAIwtaQuj5_2CFNoOoFFEwTsPijPOcfABVizxxqtVEWZTLWC9pSERRq5Z-MEAxDWCKxA' , 
+            'access_token' => env('VK_TOKEN'), 
             'v'            => $this->version, // версия API
             'name'         => 'No name',
             'description'  => '',

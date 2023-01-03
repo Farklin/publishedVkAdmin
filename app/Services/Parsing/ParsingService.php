@@ -15,7 +15,6 @@ use simplehtmldom\HtmlWeb;
 class ParsingService
 {
 
-    // TODO: протестировать логику работы
     public function start() 
     {
         
