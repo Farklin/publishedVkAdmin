@@ -143,7 +143,7 @@ class VkApi
 
     // TODO: Доделать загрузку видео
     // TODO: Получить доступ загрузки видео, токен вк 
-    public function loadVideo($url)
+    public function loadVideo($path_image)
     {
 
         // $ch = curl_init();
@@ -185,34 +185,33 @@ class VkApi
 
         $curl_result = json_decode(curl_exec($ch), TRUE); // превращаем JSON-массив, который нам вернул VK, в обычный PHP-массив
         curl_close($ch);
-        return $curl_result;    
-     
+        
 
          // // //
          // Загружаем видео на серверы ВК
          // // //
 
-        // $ch = curl_init();
-        // $parameters = [
-        //     'video_file' => new CURLFile( $path_image )  // PHP >= 5.5.0
-        //     // 'video_file' => '@kinopoisk.ru-L_odyss__233_e-311292.mp4' // PHP < 5.5.0
-        // ];
+        $ch = curl_init();
+        $parameters = [
+            'video_file' => new CURLFile( $path_image )  // PHP >= 5.5.0
+            // 'video_file' => '@kinopoisk.ru-L_odyss__233_e-311292.mp4' // PHP < 5.5.0
+        ];
         
 
-        // curl_setopt($ch, CURLOPT_URL, $curl_result['response']['upload_url']);
-        // curl_setopt($ch, CURLOPT_POST, TRUE);
-        // curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
-        // curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
+        curl_setopt($ch, CURLOPT_URL, $curl_result['response']['upload_url']);
+        curl_setopt($ch, CURLOPT_POST, TRUE);
+        curl_setopt($ch, CURLOPT_POSTFIELDS, $parameters);
+        curl_setopt($ch, CURLOPT_RETURNTRANSFER, TRUE);
 
-        // $curl_result = json_decode(curl_exec($ch), TRUE);
+        $curl_result = json_decode(curl_exec($ch), TRUE);
 
-        // curl_close($ch);
+        curl_close($ch);
 
-        // if (isset($curl_result['error'])) {
-        //     return 'Строка ' . __LINE__ . ': Ошибка при загрузке видео на серверы ВК: ';
-        // }
+        if (isset($curl_result['error'])) {
+            return 'Строка ' . __LINE__ . ': Ошибка при загрузке видео на серверы ВК: ';
+        }
 
-        // return 'Видеозапись успешно загружена.';
+        return dd($curl_result); 
             
     } 
 }

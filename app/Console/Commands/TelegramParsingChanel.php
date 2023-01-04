@@ -3,6 +3,7 @@
 namespace App\Console\Commands;
 
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\Log;
 
 class TelegramParsingChanel extends Command
 {
@@ -18,7 +19,7 @@ class TelegramParsingChanel extends Command
      *
      * @var string
      */
-    protected $description = 'Command description';
+    protected $description = 'Парсинг каналов телеграм';
 
     /**
      * Execute the console command.
@@ -29,8 +30,6 @@ class TelegramParsingChanel extends Command
     {
         $MadelineProto = new \danog\MadelineProto\API('session.madeline');
         
-       
- 
         $chanels = [
             "@rian_ru", '@izvestia', '@truekpru', 
         ];
@@ -50,11 +49,18 @@ class TelegramParsingChanel extends Command
     
             $data = $MadelineProto->messages->getHistory($settings);
             
+      
             foreach($data['messages'] as $message)
             {
+                if(isset($message['media']))
+                {
+                    Log::info($message['media']); 
+                    $MadelineProto->download_to_dir($message,  public_path() . '/videos');
+                    break; 
+                }
                 if(isset($message['message']))
                 {   
-                    print_r($message['message']); 
+                    //print_r($message['message']); 
                     // echo '-------------------';
                     // $m = strip_tags($message['message']); 
                     // print_r( str_replace(['🐔 Подписаться на @truekpr'], '', $m) ); 

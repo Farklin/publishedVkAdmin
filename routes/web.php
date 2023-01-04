@@ -37,7 +37,8 @@ Route::get('/par', function () {
 });
 
 Route::get('test', function () {
-    return ParsingWord::pluck('word')->toArray(); 
+    $vk = new VkApi();
+    //return $vk->loadVideo(public_path() . '/videos/1778705_Умер_астронавт_Уолтер_Канингэм_2сергей_04_1058_5307907265150329572.mp4');
 }); 
 
 Route::middleware('auth')->group(function(){
