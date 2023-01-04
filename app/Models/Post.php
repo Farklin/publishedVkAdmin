@@ -15,4 +15,8 @@ class Post extends Model
     public function vk() {
         return $this->belongsTo(VkPost::class); 
     }
+
+    public function media() {
+        return $this->HasMany(PostMedia::class); 
+    }
 }

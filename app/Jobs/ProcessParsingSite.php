@@ -49,6 +49,7 @@ class ProcessParsingSite implements ShouldQueue
             // Log::info('Описание' .  $description );
 
             $image = $parsingSite->getCustom($this->site->image);
+            $images[] = $image; 
             // Log::info('Изображение' .  $image );
 
             $date =  $parsingSite->getCustom($this->site->date);
@@ -65,8 +66,15 @@ class ProcessParsingSite implements ShouldQueue
                         $post->status = 0;
                         $post->date = $date;
                         $post->save();
-
-                        ProcessPublishedVk::dispatch($post);
+                        
+                        foreach($images as $img)
+                        {
+                            $post->media()->create(
+                                ['url' => $img, 'format' => 'image']
+                            );
+                        }
+                
+                        //ProcessPublishedVk::dispatch($post);
                     }
                 }
             }

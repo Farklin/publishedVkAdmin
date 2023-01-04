@@ -8,4 +8,6 @@ use Illuminate\Database\Eloquent\Model;
 class PostMedia extends Model
 {
     use HasFactory;
+
+    protected $fillable = ['url', 'format', 'path', 'status'];
 }

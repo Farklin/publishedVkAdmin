@@ -15,7 +15,7 @@ return new class extends Migration
     {
         Schema::create('post_media', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('post_id')->on('posts')->references('id');
+            $table->foreignId('post_id')->references('id')->on('posts')->onDelete('cascade')->nullable();
             $table->string('url')->nullable();
             $table->string('path')->nullable();
             $table->string('format')->nullable();
