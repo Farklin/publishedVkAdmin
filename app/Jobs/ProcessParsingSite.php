@@ -74,7 +74,7 @@ class ProcessParsingSite implements ShouldQueue
                             );
                         }
                 
-                        //ProcessPublishedVk::dispatch($post);
+                        ProcessPublishedVk::dispatch($post);
                     }
                 }
             }

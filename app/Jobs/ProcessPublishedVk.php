@@ -35,19 +35,29 @@ class ProcessPublishedVk implements ShouldQueue
      */
     public function handle()
     {
-        $img = null; 
+        $images = []; 
         // если есть картинка скачиваем     
-        if(!empty($this->post ->image))
-        {   // получаем картинку 
-            $url = $this->post->image;
-            
-            $img = explode('/', $this->post->image);
 
-            $img = public_path() . '/images/' . $img[count($img) - 1]; 
-            // скачиваем картинку 
-            file_put_contents($img, file_get_contents($url));
+        if(!empty($this->post->media))
+        {
+            foreach($this->post->media as $media)
+            {
+                // если изображение
+                if($media->format == 'image')
+                {
+                    if(!empty($media->url)) 
+                    {
+                        $url = $media->url;
+                        $img = explode('/', $media->url);
+                        $img = public_path() . '/images/' . $img[count($img) - 1]; 
+                        $images[] = $img; 
+                        // скачиваем картинку 
+                        file_put_contents($img, file_get_contents($url));
+                    }
+                }
+            }
         }
-        
+
         $vkApi = new VkApi();
 
         // найти хештеги
@@ -75,7 +85,7 @@ class ProcessPublishedVk implements ShouldQueue
         //$postVk = new PostVk(); 
        
         
-        $vk_post_id = $vkApi->publishedPost($message, $img)['response']['post_id'];
+        $vk_post_id = $vkApi->publishedPost($message, $images)['response']['post_id'];
         
         // изменяем статус публикации в базе данных 
         $this->post->status = 1;
@@ -86,10 +96,12 @@ class ProcessPublishedVk implements ShouldQueue
             'vk_post_id' => $vk_post_id,
         ]);
 
-        if(!empty($img))
+        if(!empty($images))
         {   
-            // удаляем картинку 
-            unlink($img); 
+            foreach($images as $img)
+            {
+                unlink($img);
+            }
         }
     }
 }

@@ -10,6 +10,7 @@
         "coderello/laravel-nova-lang": "^2.0",
         "danog/madelineproto": "^7.0",
         "guzzlehttp/guzzle": "^7.2",
+        "irazasyed/telegram-bot-sdk": "dev-develop",
         "laravel/framework": "^9.19",
         "laravel/nova": "*",
         "laravel/sanctum": "^3.0",
