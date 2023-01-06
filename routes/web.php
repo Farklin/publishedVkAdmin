@@ -43,7 +43,7 @@ Route::get('/par', function () {
 Route::get('test', function () {
     $vk = new VkApi();
 
-    $vk->publishedPost('текст', [public_path() . '/images/test.jpg', public_path() . '/images/test.jpg']);
+    //$vk->publishedPost('текст', [public_path() . '/images/test.jpg', public_path() . '/images/test.jpg']);
     //return $vk->loadVideo(public_path() . '/videos/1778705_Умер_астронавт_Уолтер_Канингэм_2сергей_04_1058_5307907265150329572.mp4');
 });
 
@@ -85,31 +85,44 @@ Route::get('/bot/get-update', function () {
 
     // return dd($messageId); 
     foreach ($updates as $message)
-    {
+    {   
         if(isset($message['callback_query']))
         {    
             // при возврате нажатии кнопки в телеграм 
-            try{
-                Telegram::editMessageReplyMarkup([
-                    'message_id' =>  $message['callback_query']['message']['message_id'],
-                    'chat_id' => 1037165023, 
-                    'reply_markup' => '', 
-                ]); 
+            
+            $calback = explode('|', $message['callback_query']['data']);
+            if(in_array($message['callback_query']['from']['id'], config('telegram')['admins'])) 
+            {
+                if($calback[0] == 'published') 
+                { 
+                    $post = Post::find($calback[1]);
+                    $post->moderation = 'published';
+                    $post->save();
+                }
+                if($calback[0] == 'banned') 
+                { 
+                    $post = Post::find($calback[1]);
+                    $post->moderation = 'banned';
+                     $post->save();
+                }
+    
+                try{
+                    Telegram::editMessageReplyMarkup([
+                        'message_id' =>  $message['callback_query']['message']['message_id'],
+                        'chat_id' => $message['callback_query']['message']['chat']['id'], 
+                        'reply_markup' => '', 
+                    ]); 
+                }
+                catch(Exception $e){
+    
+                }
             }
-            catch(Exception $e){
-
-            }
-
-            // $calback = explode('|', $message['callback_query']['data']);
-            // if($calback[0] == 'published') 
-            // { 
-            //     $ids[] = $calback[1]; 
-            //     //TODO: изменение сообщенийя 
-            // }
-            return dd($message); 
+            
         }
     }
-    return Post::whereIn('id', $ids)->get(); 
+  
+    
+    
     // foreach(Post::limit(8)->get() as $post)
     // {
     //     $inline_keyboard = json_encode([ //Потому что его объект

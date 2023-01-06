@@ -15,7 +15,7 @@ class PublishedVkController extends Controller
         $parsing = new ParsingService();
         $parsing->start();
 
-        $posts = Post::where('status', 0)->get();
+        $posts = Post::where('status', 0)->where('moderation', 'published')->get();
         
         foreach($posts as $post)
         {   

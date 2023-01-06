@@ -12,6 +12,7 @@ use Laravel\Nova\Fields\Textarea;
 use Laravel\Nova\Http\Requests\NovaRequest;
 use Chaseconey\ExternalImage\ExternalImage;
 use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Select;
 
 class Post extends Resource
 {
@@ -52,6 +53,11 @@ class Post extends Resource
             Textarea::make('Описание', 'description'),
             Text::make('Сайт', 'url'),
             ExternalImage::make('image')->default(''), 
+            Select::make('moderation')->options([
+                'load' => 'Не обработан',
+                'published' => 'Разрешен к публикации',
+                'banned' => 'Запрещен к публикации',
+            ]),
             //Text::make('Дата публикации','date_published'),
             Boolean::make('Статус размещения', 'status'), 
         ];

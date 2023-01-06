@@ -73,8 +73,7 @@ class ProcessParsingSite implements ShouldQueue
                                 ['url' => $img, 'format' => 'image']
                             );
                         }
-                
-                        ProcessPublishedVk::dispatch($post);
+            
                     }
                 }
             }
