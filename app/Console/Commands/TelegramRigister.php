@@ -61,19 +61,19 @@ class TelegramRigister extends Command
     
             $MadelineProto = new \danog\MadelineProto\API('session.madeline', $settings);
     
-            $MadelineProto->phone_login(\readline('Enter your phone number: ')); //вводим в консоли свой номер телефона
+            $MadelineProto->phone_login($MadelineProto->readline('Enter your phone number: ')); //вводим в консоли свой номер телефона
     
-            $authorization = $MadelineProto->complete_phone_login(\readline('Enter the code you received: ')); // вводим в консоли код авторизации, который придет в телеграм
+            $authorization = $MadelineProto->complete_phone_login($MadelineProto->readline('Enter the code you received: ')); // вводим в консоли код авторизации, который придет в телеграм
     
             if ($authorization['_'] === 'account.noPassword') {
     
                 throw new \danog\MadelineProto\Exception('2FA is enabled but no password is set!');
             }
             if ($authorization['_'] === 'account.password') {
-                $authorization = $MadelineProto->complete_2fa_login(\readline('Please enter your password (hint ' . $authorization['hint'] . '): ')); //если включена двухфакторная авторизация, то вводим в консоли пароль.
+                $authorization = $MadelineProto->complete_2fa_login($MadelineProto->readline('Please enter your password (hint ' . $authorization['hint'] . '): ')); //если включена двухфакторная авторизация, то вводим в консоли пароль.
             }
             if ($authorization['_'] === 'account.needSignup') {
-                $authorization = $MadelineProto->complete_signup(\readline('Please enter your first name: '), \readline('Please enter your last name (can be empty): '));
+                $authorization = $MadelineProto->complete_signup($MadelineProto->readline('Please enter your first name: '), \readline('Please enter your last name (can be empty): '));
             }
         } catch (Exception $ex) {
             echo $ex->getMessage();
