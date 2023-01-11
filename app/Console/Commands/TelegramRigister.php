@@ -32,7 +32,7 @@ class TelegramRigister extends Command
     public function handle()
     {   
         
-        set_time_limit(120); 
+        set_time_limit(180); 
         
         $settings = [
             'authorization' => [

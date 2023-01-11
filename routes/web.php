@@ -1,5 +1,6 @@
 <?php
 
+use App\Console\Commands\TelegramParsingChanel;
 use App\Http\Controllers\PublishedVkController;
 use App\Http\Livewire\Parsing\ParsingLinks;
 use App\Models\ParsingLink;
@@ -37,6 +38,8 @@ Route::get('/par', function () {
 
     $controller = new PublishedVkController();
     $controller->index();
+    $telegramParsing = new TelegramParsingChanel(); 
+    $telegramParsing->handle(); 
     return 'Задачи поставлены в очередь';
 });
 
