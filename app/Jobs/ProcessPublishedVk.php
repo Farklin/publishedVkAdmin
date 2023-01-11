@@ -29,13 +29,14 @@ class ProcessPublishedVk implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Процесс публикации вконтакте 
      *
      * @return void
      */
     public function handle()
     {
         $images = []; 
+        $videos = []; 
         // если есть картинка скачиваем     
 
         if(!empty($this->post->media))
@@ -55,14 +56,58 @@ class ProcessPublishedVk implements ShouldQueue
                         file_put_contents($img, file_get_contents($url));
                     }
                 }
+
+                // если видео 
+                if($media->format == 'video')
+                {
+                    if(!empty($media->path)) 
+                    {
+                        $videos[] = $media->path; 
+                    }
+                }
             }
         }
 
         $vkApi = new VkApi();
 
         // найти хештеги
-        $hashtags = []; 
+        $hashtags = $this->searhHashtag($this->post);  
+        $message = $this->post->description . "\n\n" . implode(' ', $hashtags); 
+        
+        // публикуем пост 
+        //$postVk = new PostVk(); 
+       
+        
+        $vk_post_id = $vkApi->publishedPost($message, $images, $videos)['response']['post_id'];
+        
+        // изменяем статус публикации в базе данных 
+        $this->editSatatusPost($this->post, $vk_post_id); 
 
+        $this->deleteMediaFile($images); 
+        $this->deleteMediaFile($videos); 
+
+    }
+
+    public function editSatatusPost(Post $post, $vk_post_id)
+    {
+        $this->post->status = 1;
+        $this->post->save();  
+
+        $this->post->vk()->create([
+            'post_id' => $this->post->id, 
+            'vk_post_id' => $vk_post_id,
+        ]);
+    }
+    
+    /**
+     * Найти хештеги публикации 
+     *
+     * @param Post $post
+     * @return array hashtags
+     */
+    public function searhHashtag(Post $post)
+    {
+        $hashtags = []; 
         foreach(Hashtag::where('active', 1)->get() as $itemHashtag)
         {
             foreach(explode(',', $itemHashtag->words) as $hashtag)
@@ -79,26 +124,20 @@ class ProcessPublishedVk implements ShouldQueue
             }
         }
 
-        $message = $this->post->description . "\n\n" . implode(' ', $hashtags); 
-        
-        // публикуем пост 
-        //$postVk = new PostVk(); 
-       
-        
-        $vk_post_id = $vkApi->publishedPost($message, $images)['response']['post_id'];
-        
-        // изменяем статус публикации в базе данных 
-        $this->post->status = 1;
-        $this->post->save();  
+        return $hashtags; 
 
-        $this->post->vk()->create([
-            'post_id' => $this->post->id, 
-            'vk_post_id' => $vk_post_id,
-        ]);
-
-        if(!empty($images))
+    }
+    /**
+     * Удалить из локальной папки изображения 
+     *
+     * @param array $images
+     * @return void
+     */
+    public function deleteMediaFile(array $files)
+    {
+        if(!empty($files))
         {   
-            foreach($images as $img)
+            foreach($files as $img)
             {
                 unlink($img);
             }

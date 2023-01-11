@@ -11,6 +11,11 @@ class VkApi
     public $albumId = '289249913';
     public $version = '5.81';
 
+    /**
+     * Получение хранилища для загрузки файлов 
+     *
+     * @return upload_url ссылка сервера для загрузки 
+     */
     public function getStorage()
     {
 
@@ -39,7 +44,14 @@ class VkApi
         return $result['response']['upload_url'];
     }
 
-    public function loadImage($upload_server, $images)
+    /**
+     * Загрузка изображений на сервер 
+     *
+     * @param [type] $upload_server ссылка сервера загрузки 
+     * @param [array] $images массив изображений (локальное расположение)
+     * @return array $ids массив id загруженых изображений  
+     */
+    public function loadImage($upload_server, array $images)
     {
         $curl = curl_init();
 
@@ -93,7 +105,7 @@ class VkApi
         $response = curl_exec($curl);
         curl_close($curl);
         $result = json_decode($response, true);
-        Log::info($result['response']);
+
 
         $ids = [];
         foreach ($result['response'] as $imageJson) {
@@ -101,8 +113,15 @@ class VkApi
         }
         return $ids;
     }
-
-    public function createPost($message, array $photo_ids)
+    
+    /**
+     * Создание поста 
+     *
+     * @param [string] $message текст публикации 
+     * @param array $photo_ids массив id изобрежений 
+     * @return responce 
+     */
+    public function createPost($message, array $photo_ids = null, array $video_ids = null)
     {
         $curl = curl_init();
         $get = [
@@ -117,6 +136,14 @@ class VkApi
             $attachments = [];
             foreach ($photo_ids as $photo) {
                 $attachments[] = 'photo' . '-' . $this->groupId . '_' . $photo;
+            }
+            $get['attachments'] =  join(',', $attachments);
+        }
+
+        if (!empty($video_ids)) {
+            $attachments = [];
+            foreach ($video_ids as $video) {
+                $attachments[] = 'video' . '-' . $this->groupId . '_' . $video;
             }
             $get['attachments'] =  join(',', $attachments);
         }
@@ -138,8 +165,18 @@ class VkApi
 
         return $result;
     }
+    
     //TODO: переделать под публикацию нескольких изобображений или видео 
-    public function publishedPost($message, array $images)
+
+    /**
+     * Undocumented function
+     *
+     * @param [string] $message 
+     * @param array|null $images путь к файлам с изображениями()
+     * @param array|null $videos путь к файлам с видео()
+     * @return responce 
+     */
+    public function publishedPost(string $message, array $images = null, array $videos = null, string $video_name='')
     {
         $vkApi = new VkApi();
         $photoIds = [];
@@ -147,11 +184,22 @@ class VkApi
             $uploadImage = $vkApi->getStorage();
             $photoIds =  $vkApi->loadImage($uploadImage, $images);
         }
-        return $vkApi->createPost($message, $photoIds);
+        $videoIds = []; 
+        if(!empty($videos))
+        {   
+            $count = 1; 
+            foreach($videos as $video)
+            {
+                $videoIds[] = $this->loadVideo($video, $video_name . '_' . $count); 
+                $count ++; 
+            }
+        }
+        return $vkApi->createPost($message, $photoIds, $videoIds);
     }
 
 
-    public function loadVideo($path_image)
+
+    public function loadVideo($path_image, $name = 'No name', $description = '' )
     {
 
         // $ch = curl_init();
@@ -181,8 +229,8 @@ class VkApi
         $parameters = http_build_query([
             'access_token' => env('VK_TOKEN'),
             'v'            => $this->version, // версия API
-            'name'         => 'No name',
-            'description'  => '',
+            'name'         => $name ,
+            'description'  => $description,
             'group_id'     => $this->groupId, // ID группы
             'no_comments'  => 0 // разрешаем комментирование
         ]);
@@ -219,6 +267,6 @@ class VkApi
             return 'Строка ' . __LINE__ . ': Ошибка при загрузке видео на серверы ВК: ';
         }
 
-        return dd($curl_result);
+        return $curl_result['video_id'];
     }
 }

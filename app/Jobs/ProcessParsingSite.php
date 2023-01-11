@@ -31,7 +31,7 @@ class ProcessParsingSite implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Процесс парсинга сайтов и получения контента с этого сайта с помощью селекторов указаных в базе данных 
      *
      * @return void
      */

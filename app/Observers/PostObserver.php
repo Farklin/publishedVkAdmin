@@ -7,6 +7,9 @@ use App\Jobs\Telegram\ProcessTelegramPostModeraion;
 use App\Models\Post;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
+/***
+ * Обработчик событий модели пост
+ */
 class PostObserver
 {
     /**
@@ -16,7 +19,8 @@ class PostObserver
      * @return void
      */
     public function created(Post $post)
-    {
+    {   
+        // переслать сообщение в телеграм с кнопками опубликовать / не публиковать 
         ProcessTelegramPostModeraion::dispatch($post); 
     }
 
@@ -27,7 +31,8 @@ class PostObserver
      * @return void
      */
     public function updated(Post $post)
-    {
+    {   
+        // при обновлении поставить в очередь на публикацию 
         if($post->moderation == 'published' and $post->status == 0)
         {
             ProcessPublishedVk::dispatch($post);

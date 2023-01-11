@@ -30,7 +30,7 @@ class ProcessTelegramPostModeraion implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Процесс отправки сообщения в телеграм с подтверждением публикации 
      *
      * @return void
      */
@@ -45,7 +45,41 @@ class ProcessTelegramPostModeraion implements ShouldQueue
             ]
         ]);
         foreach(config('telegram')['admins'] as $admin_id)
-        {
+        {   
+            foreach($this->post->media as $media)
+            { 
+                if($media->format == 'image')
+                {   
+                    if(!empty($media->path))
+                    {
+                        Telegram::sendPhoto([
+                            'chat_id' => $admin_id, 
+                            'photo' => \Telegram\Bot\FileUpload\InputFile::create($media->path),
+                            'caption' => ''
+                        ]);
+                    }else 
+                    {
+                        Telegram::sendPhoto([
+                            'chat_id' => $admin_id, 
+                            'photo' => \Telegram\Bot\FileUpload\InputFile::create($media->url),
+                            'caption' => ''
+                        ]);
+                    }
+                  
+                   
+                }
+
+                if($media->format == 'video')
+                {
+                    Telegram::sendVideo([
+                        'chat_id' => $admin_id, 
+                        'video' => \Telegram\Bot\FileUpload\InputFile::create($media->path),
+                    ]);
+                }
+
+            }
+        
+            
             Telegram::sendMessage([
                 'chat_id' => $admin_id,
                 'text' => $this->post->description,

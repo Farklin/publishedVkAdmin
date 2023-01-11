@@ -10,6 +10,7 @@ use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Foundation\Bus\Dispatchable;
 use Illuminate\Queue\InteractsWithQueue;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Support\Facades\Log;
 
 class ProcessTelegramParsingChanel implements ShouldQueue
 {
@@ -27,7 +28,7 @@ class ProcessTelegramParsingChanel implements ShouldQueue
     }
 
     /**
-     * Execute the job.
+     * Процесс парсинга сообщений из телегрмма
      *
      * @return void
      */
@@ -68,6 +69,7 @@ class ProcessTelegramParsingChanel implements ShouldQueue
                             $media = $MadelineProto->download_to_dir($message,  public_path() . '/videos');
                             $images[] = $media;
                             // перебираем media
+                            Log::info($images); 
                             foreach ($images as $img) {
                                 if (isset($img)) {
                                     // получаем тип файла 
@@ -77,9 +79,10 @@ class ProcessTelegramParsingChanel implements ShouldQueue
                                     } else if (strstr($mime, "image/")) {
                                         $filetype = "image";
                                     }
+                                    
                                     // добавляем к записи media контент
                                     $post->media()->create(
-                                        ['url' => $img, 'format' => $filetype]
+                                        ['path' => $img, 'format' => $filetype]
                                     );
                                 }
                             }
