@@ -70,8 +70,7 @@ Route::any('test', function () {
     ];
     
     $MadelineProto = new \danog\MadelineProto\API('session.madeline', $settings);
-    $MadelineProto->session = 'session.madeline';
-    $MadelineProto->serialize();
+
   
     return $MadelineProto->start();
 
