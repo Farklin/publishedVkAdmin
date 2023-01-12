@@ -32,57 +32,57 @@ class TelegramRigister extends Command
     public function handle()
     {   
 
-        $MadelineProto = new \danog\MadelineProto\API('session.madeline');
-        $MadelineProto->async(false);
-        $MadelineProto->start();
-        // $settings = [
-        //     'authorization' => [
-        //         'default_temp_auth_key_expires_in' => 900000, // секунды. Столько будут действовать ключи
-        //     ],
-        //     'app_info' => [// Эти данные мы получили после регистрации приложения на https://my.telegram.org
-        //         'api_id' => $this->api_id,
-        //         'api_hash' => $this->api_hash
-        //     ],
-        //     'logger' => [// Вывод сообщений и ошибок
-        //         'logger' => 3, // выводим сообещения через echo
-        //         'logger_level' => \danog\MadelineProto\Logger::ULTRA_VERBOSE,
-        //     ],
-        //     'max_tries' => [// Количество попыток установить соединения на различных этапах работы. 
-        //         'query' => 5,
-        //         'authorization' => 5,
-        //         'response' => 5,
-        //     ],
-        //     'updates' => [//
-        //         'handle_updates' => false,
-        //         'handle_old_updates' => false,
-        //     ],
-        // ];
+        // $MadelineProto = new \danog\MadelineProto\API('session.madeline');
+        // $MadelineProto->async(false);
+        // $MadelineProto->start();
+        $settings = [
+            'authorization' => [
+                'default_temp_auth_key_expires_in' => 900000, // секунды. Столько будут действовать ключи
+            ],
+            'app_info' => [// Эти данные мы получили после регистрации приложения на https://my.telegram.org
+                'api_id' => $this->api_id,
+                'api_hash' => $this->api_hash
+            ],
+            'logger' => [// Вывод сообщений и ошибок
+                'logger' => 3, // выводим сообещения через echo
+                'logger_level' => \danog\MadelineProto\Logger::ULTRA_VERBOSE,
+            ],
+            'max_tries' => [// Количество попыток установить соединения на различных этапах работы. 
+                'query' => 5,
+                'authorization' => 5,
+                'response' => 5,
+            ],
+            'updates' => [//
+                'handle_updates' => false,
+                'handle_old_updates' => false,
+            ],
+        ];
     
-        // try {
+        try {
     
-        //     $MadelineProto = new \danog\MadelineProto\API('session.madeline', $settings);
+            $MadelineProto = new \danog\MadelineProto\API('session.madeline', $settings);
     
-        //     $MadelineProto->phone_login($MadelineProto->readline('Enter your phone number: ')); //вводим в консоли свой номер телефона
+            $MadelineProto->phone_login(env('TELEGRAM_MADELINE_PHONE')); //вводим в консоли свой номер телефона
     
-        //     $authorization = $MadelineProto->complete_phone_login($MadelineProto->readline('Enter the code you received: ')); // вводим в консоли код авторизации, который придет в телеграм
+            $authorization = $MadelineProto->complete_phone_login($MadelineProto->readline('Enter the code you received: ')); // вводим в консоли код авторизации, который придет в телеграм
     
-        //     if ($authorization['_'] === 'account.noPassword') {
+            if ($authorization['_'] === 'account.noPassword') {
     
-        //         throw new \danog\MadelineProto\Exception('2FA is enabled but no password is set!');
-        //     }
-        //     if ($authorization['_'] === 'account.password') {
-        //         $authorization = $MadelineProto->complete_2fa_login($MadelineProto->readline('Please enter your password (hint ' . $authorization['hint'] . '): ')); //если включена двухфакторная авторизация, то вводим в консоли пароль.
-        //     }
-        //     if ($authorization['_'] === 'account.needSignup') {
-        //         $authorization = $MadelineProto->complete_signup($MadelineProto->readline('Please enter your first name: '), \readline('Please enter your last name (can be empty): '));
-        //     }
-        // } catch (Exception $ex) {
-        //     echo $ex->getMessage();
-        //     exit();
-        // }
-        // $MadelineProto->session = 'session.madeline';
+                throw new \danog\MadelineProto\Exception('2FA is enabled but no password is set!');
+            }
+            if ($authorization['_'] === 'account.password') {
+                $authorization = $MadelineProto->complete_2fa_login($MadelineProto->readline('Please enter your password (hint ' . $authorization['hint'] . '): ')); //если включена двухфакторная авторизация, то вводим в консоли пароль.
+            }
+            if ($authorization['_'] === 'account.needSignup') {
+                $authorization = $MadelineProto->complete_signup($MadelineProto->readline('Please enter your first name: '), \readline('Please enter your last name (can be empty): '));
+            }
+        } catch (Exception $ex) {
+            echo $ex->getMessage();
+            exit();
+        }
+        $MadelineProto->session = 'session.madeline';
     
-        // $MadelineProto->serialize(); // Сохраняем настройки сессии в файл, что бы использовать их для быстрого подключения. 
+        $MadelineProto->serialize(); // Сохраняем настройки сессии в файл, что бы использовать их для быстрого подключения. 
         
         return Command::SUCCESS;
     }
