@@ -43,8 +43,33 @@ Route::get('/par', function () {
     return 'Задачи поставлены в очередь';
 });
 
-Route::get('test', function () {
-    $vk = new VkApi();
+Route::any('test', function () {
+     $api_id = '1984546';
+     $api_hash = '05de3877482473e934f58593944edf3a';
+    $settings = [
+        'authorization' => [
+            'default_temp_auth_key_expires_in' => 900000, // секунды. Столько будут действовать ключи
+        ],
+        'app_info' => [// Эти данные мы получили после регистрации приложения на https://my.telegram.org
+            'api_id' => $api_id,
+            'api_hash' => $api_hash
+        ],
+        'logger' => [// Вывод сообщений и ошибок
+            'logger' => 3, // выводим сообещения через echo
+            'logger_level' => \danog\MadelineProto\Logger::ULTRA_VERBOSE,
+        ],
+        'max_tries' => [// Количество попыток установить соединения на различных этапах работы. 
+            'query' => 5,
+            'authorization' => 5,
+            'response' => 5,
+        ],
+        'updates' => [//
+            'handle_updates' => false,
+            'handle_old_updates' => false,
+        ],
+    ];
+    $MadelineProto = new \danog\MadelineProto\API('session.madeline', $settings);
+    return $MadelineProto->start();
 
     //$vk->publishedPost('текст', [public_path() . '/images/test.jpg', public_path() . '/images/test.jpg']);
     //return $vk->loadVideo(public_path() . '/videos/1778705_Умер_астронавт_Уолтер_Канингэм_2сергей_04_1058_5307907265150329572.mp4');
