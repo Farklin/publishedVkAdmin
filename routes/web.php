@@ -68,7 +68,11 @@ Route::any('test', function () {
             'handle_old_updates' => false,
         ],
     ];
+    
     $MadelineProto = new \danog\MadelineProto\API('session.madeline', $settings);
+    $MadelineProto->session = 'session.madeline';
+    $MadelineProto->serialize();
+  
     return $MadelineProto->start();
 
     //$vk->publishedPost('текст', [public_path() . '/images/test.jpg', public_path() . '/images/test.jpg']);
