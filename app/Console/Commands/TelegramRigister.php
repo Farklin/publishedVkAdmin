@@ -63,8 +63,8 @@ class TelegramRigister extends Command
             $MadelineProto = new \danog\MadelineProto\API('session.madeline', $settings);
     
             $MadelineProto->phone_login(env('TELEGRAM_MADELINE_PHONE')); //вводим в консоли свой номер телефона
-            sleep(60); 
-            $authorization = $MadelineProto->complete_phone_login(config('telegram')['code']); // вводим в консоли код авторизации, который придет в телеграм
+          
+            $authorization = $MadelineProto->complete_phone_login(readline('code')); // вводим в консоли код авторизации, который придет в телеграм
     
             if ($authorization['_'] === 'account.noPassword') {
     
