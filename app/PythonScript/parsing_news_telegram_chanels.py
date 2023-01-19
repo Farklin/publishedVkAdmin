@@ -12,10 +12,14 @@ from telethon.tl.functions.channels import GetFullChannelRequest
 import glob
 import os 
 import shutil
+import os
+from dotenv import load_dotenv
 
+load_dotenv()
 
-api_id = 1984546
-api_hash = '05de3877482473e934f58593944edf3a'
+api_id = os.getenv('API_TELEGRAM_ID')
+api_hash = os.getenv('API_TELEGRAM_HASH')
+
 path_media = 'public/images/'
 
 client = TelegramClient('session_name', api_id, api_hash)
@@ -61,12 +65,23 @@ def parsingChanel(title):
         return medias
 
 
-    key_word = ['Путин']
+    key_word = [
+        'возгорания',
+        'возгорание',
+        'пожаре',
+        'загорания',
+        'загорание',
+        'пожаров',
+        'пожар',
+    ]
+
+
     result = []
 
     for ms in messages: 
 
         el = dict()
+        el['chanel_name'] = title 
         el['message'] = ''
         el['media'] = [] 
         
@@ -91,10 +106,16 @@ def parsingChanel(title):
             if el['message'] != '': 
                 result.append(el)
 
-    with open('public/' + 'telegram_chanels.json', 'w', encoding='utf-8') as f:
-        json.dump(result, f, ensure_ascii=False, indent=4)
+    return result
 
-    
 
-title = "РИА Новости"
-parsingChanel(title)
+
+
+titles = ['РИА Новости', 'IZ.RU', 'Комсомольская правда: KP.RU' ]
+
+result_all = [] 
+for title in titles:
+    result_all  += parsingChanel(title)
+
+with open('public/' + 'telegram_chanels.json', 'w', encoding='utf-8') as f:
+    json.dump(result_all, f, ensure_ascii=False, indent=4)
