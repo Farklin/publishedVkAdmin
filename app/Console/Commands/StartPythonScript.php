@@ -41,7 +41,7 @@ class StartPythonScript extends Command
         // $data = $process->getOutput();
 
         // dd($data);
-        $path = public_path() . '\telegram_chanels.json'; 
+        $path = public_path() . '/telegram_chanels.json'; 
         $messages = json_decode(file_get_contents($path), true);
         
         foreach($messages as $message)
