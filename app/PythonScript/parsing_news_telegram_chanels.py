@@ -101,7 +101,7 @@ def parsingChanel(title):
             if ms.grouped_id == None and ms.message != '': 
                 el['message'] = ms.message
                 if ms.media != None:
-                    el['media'].append(ms.download_media('images_telegram_chanel/', progress_callback=callback))
+                    el['media'].append(ms.download_media(path_media, progress_callback=callback))
 
             if el['message'] != '': 
                 result.append(el)
