@@ -61,7 +61,7 @@ def parsingChanel(title):
         return medias
 
 
-    key_word = ['пожар']
+    key_word = ['Путин']
     result = []
 
     for ms in messages: 
