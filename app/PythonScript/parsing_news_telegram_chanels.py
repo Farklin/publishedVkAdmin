@@ -15,12 +15,19 @@ import shutil
 import os
 from dotenv import load_dotenv
 
+dirname = os.path.abspath(__file__)
+dirname = dirname.split('\\')[:-2]
+filename = os.path.join("\\".join(dirname), 'public\image')
+path_media = os.path.join("\\".join(dirname), 'public\image')
+
+print(path_media)
+exit() 
 load_dotenv()
 
 api_id = os.getenv('API_TELEGRAM_ID')
 api_hash = os.getenv('API_TELEGRAM_HASH')
 
-path_media = 'public/images/'
+
 
 client = TelegramClient('session_name', api_id, api_hash)
 client.start()
