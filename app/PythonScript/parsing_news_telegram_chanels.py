@@ -15,21 +15,18 @@ import shutil
 import os
 from dotenv import load_dotenv
 
-dirname = os.path.abspath(__file__)
-dirname = dirname.split('\\')[:-2]
-filename = os.path.join("\\".join(dirname), 'public\image')
-path_media = os.path.join("\\".join(dirname), 'public\image')
+path = "/home/f/firetecr/firetecr.beget.tech/public_html/"
+env = path + ".env" 
+path_media = path + "public/images/"
 
-print(path_media)
-exit() 
-load_dotenv()
+load_dotenv(env)
 
 api_id = os.getenv('API_TELEGRAM_ID')
 api_hash = os.getenv('API_TELEGRAM_HASH')
 
 
 
-client = TelegramClient('session_name', api_id, api_hash)
+client = TelegramClient(path + 'session_name', api_id, api_hash)
 client.start()
 
 chats = []
@@ -124,5 +121,5 @@ result_all = []
 for title in titles:
     result_all  += parsingChanel(title)
 
-with open('public/' + 'telegram_chanels.json', 'w', encoding='utf-8') as f:
+with open(path + 'public/' 'telegram_chanels.json', 'w', encoding='utf-8') as f:
     json.dump(result_all, f, ensure_ascii=False, indent=4)
