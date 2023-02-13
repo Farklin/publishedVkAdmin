@@ -22,5 +22,7 @@ yarn-error.log
 session.*
 *.log
 *.mp4
+*.MP4
+*.MOV
 *.jpg
 *.session

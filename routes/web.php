@@ -38,8 +38,6 @@ Route::get('/par', function () {
 
     $controller = new PublishedVkController();
     $controller->index();
-    $telegramParsing = new TelegramParsingChanel(); 
-    $telegramParsing->handle(); 
     return 'Задачи поставлены в очередь';
 });
 
