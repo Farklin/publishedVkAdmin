@@ -7,6 +7,7 @@ use App\Models\ParsingLink;
 use App\Models\ParsingWord;
 use App\Models\Post;
 use App\Models\SiteSetting;
+use App\Services\Parsing\ParsingService;
 use App\Services\Parsing\Sites\Site;
 use App\Services\Parsing\Telegram\TgIca;
 use App\Services\Vk\VkApi;
@@ -36,8 +37,12 @@ use Telegram\Bot\Laravel\Facades\Telegram;
 
 Route::get('/par', function () {
 
-    $controller = new PublishedVkController();
-    $controller->index();
+    // $controller = new PublishedVkController();
+    // $controller->index();
+
+    $parsing = new ParsingService();
+    $parsing->start();
+
     return 'Задачи поставлены в очередь';
 });
 
