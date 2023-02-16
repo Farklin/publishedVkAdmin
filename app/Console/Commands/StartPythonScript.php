@@ -59,28 +59,29 @@ class StartPythonScript extends Command
                         $post->status = 0;
                         $post->save();
                         print_r($post);
+                        if (isset($message['media'])) {
+                            $images = $message['media'];
+                            foreach ($images as $img) {
+                                if (isset($img)) {
+                                    // получаем тип файла 
+                                    $mime = mime_content_type($img);
+                                    if (strstr($mime, "video/")) {
+                                        $filetype = "video";
+                                    } else if (strstr($mime, "image/")) {
+                                        $filetype = "image";
+                                    }
+                                    
+                                    // добавляем к записи media контент
+                                    $post->media()->create(
+                                        ['path' => $img, 'format' => $filetype]
+                                    );
+                                }
+                            }
+                        } 
                     } 
                    
 
-                    if (isset($message['media'])) {
-                        $images = $message['media'];
-                        foreach ($images as $img) {
-                            if (isset($img)) {
-                                // получаем тип файла 
-                                $mime = mime_content_type($img);
-                                if (strstr($mime, "video/")) {
-                                    $filetype = "video";
-                                } else if (strstr($mime, "image/")) {
-                                    $filetype = "image";
-                                }
-                                
-                                // добавляем к записи media контент
-                                $post->media()->create(
-                                    ['path' => $img, 'format' => $filetype]
-                                );
-                            }
-                        }
-                    } 
+                    
                 } 
             } 
         }
