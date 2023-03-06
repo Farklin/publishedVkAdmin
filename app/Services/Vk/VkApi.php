@@ -129,25 +129,23 @@ class VkApi
             'from_group' => '1',
             'message' => $message,
             'access_token' => env('VK_TOKEN'),
+            'attachments' => '', 
             'v' => '5.81',
         ];
-
+        $attachments = [];
         if (!empty($photo_ids)) {
-            $attachments = [];
+          
             foreach ($photo_ids as $photo) {
                 $attachments[] = 'photo' . '-' . $this->groupId . '_' . $photo;
             }
-            $get['attachments'] =  join(',', $attachments);
         }
 
         if (!empty($video_ids)) {
-            $attachments = [];
             foreach ($video_ids as $video) {
                 $attachments[] = 'video' . '-' . $this->groupId . '_' . $video;
             }
-            $get['attachments'] =  join(',', $attachments);
         }
-
+        $get['attachments'] =  join(',', $attachments);
         curl_setopt_array($curl, array(
             CURLOPT_URL => 'https://api.vk.com/method/wall.post?' . http_build_query($get),
             CURLOPT_RETURNTRANSFER => true,

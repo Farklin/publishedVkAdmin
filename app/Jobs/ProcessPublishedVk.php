@@ -5,6 +5,7 @@ namespace App\Jobs;
 use App\Models\Hashtag;
 use App\Models\Post;
 use App\Models\VkPost;
+use App\Models\ParsingChanelWord;
 use App\Services\Vk\VkApi;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldBeUnique;
@@ -54,6 +55,11 @@ class ProcessPublishedVk implements ShouldQueue
                         $images[] = $img; 
                         // скачиваем картинку 
                         file_put_contents($img, file_get_contents($url));
+                    }else{
+                         if(!empty($media->path)) 
+                            {
+                                $images[] = $media->path; 
+                            }
                     }
                 }
 
@@ -82,6 +88,13 @@ class ProcessPublishedVk implements ShouldQueue
         
         // изменяем статус публикации в базе данных 
         $this->editSatatusPost($this->post, $vk_post_id); 
+        
+        $chanel = ParsingChanelWord::where(['name' => $this->post->url])->first();
+        if($chanel)
+        {
+            $chanel->count_published_post += 1; 
+            $chanel->save(); 
+        }
 
         $this->deleteMediaFile($images); 
         $this->deleteMediaFile($videos); 
@@ -112,7 +125,7 @@ class ProcessPublishedVk implements ShouldQueue
         {
             foreach(explode(',', $itemHashtag->words) as $hashtag)
             {
-                $searchHashtagStatus = strpos($this->post->description, $hashtag);
+                $searchHashtagStatus = stripos($this->post->description, $hashtag);
                 if($searchHashtagStatus)
                 {  
                     if(!empty($itemHashtag->hashtag))
@@ -135,12 +148,12 @@ class ProcessPublishedVk implements ShouldQueue
      */
     public function deleteMediaFile(array $files)
     {
-        if(!empty($files))
+        /*if(!empty($files))
         {   
             foreach($files as $img)
             {
                 unlink($img);
             }
-        }
+        }*/
     }
 }

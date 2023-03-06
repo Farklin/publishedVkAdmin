@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\ParsingWord;
 use App\Models\Post;
+use App\Models\ParsingChanelWord;
 use Illuminate\Console\Command;
 use Symfony\Component\Process\Exception\ProcessFailedException;
 use Symfony\Component\Process\Process;
@@ -58,6 +59,16 @@ class StartPythonScript extends Command
                         $post->description =  $message['message'];
                         $post->status = 0;
                         $post->save();
+
+                        //добаление счетчика канала
+                        $chanel = ParsingChanelWord::where(['name' => $message['chanel_name']])->first();
+                        if($chanel)
+                        {
+                            $chanel->count_view += 1; 
+                            $chanel->save(); 
+                        }
+                        
+
                         print_r($post);
                         if (isset($message['media'])) {
                             $images = $message['media'];

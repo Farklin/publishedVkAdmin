@@ -4,17 +4,17 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\Text;
 
-class SiteSetting extends Resource
+class PostMedia extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\SiteSetting>
+     * @var class-string<\App\Models\PostMedia>
      */
-    public static $model = \App\Models\SiteSetting::class;
+    public static $model = \App\Models\PostMedia::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -42,11 +42,10 @@ class SiteSetting extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make("site")->nullable(),
-            Text::make("title")->nullable(),
-            Text::make("description")->nullable(),
-            Text::make("image")->nullable(),
-            Text::make("date")->nullable(),
+            Text::make('url'),
+            Text::make('path'),
+            Text::make('format'),
+            Text::make('status'),
         ];
     }
 
@@ -96,7 +95,7 @@ class SiteSetting extends Resource
 
     public static function label()
     {
-        return __('Парсинг сайтов');
+        return __('Медиа контент');
     }
 
     /**
@@ -106,8 +105,7 @@ class SiteSetting extends Resource
      */
     public static function singularLabel()
     {
-        return __('Настойка парсинга сайта');
+        return __('Медиа контент');
     }
-
 
 }

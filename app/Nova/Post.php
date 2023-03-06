@@ -13,6 +13,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Chaseconey\ExternalImage\ExternalImage;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Select;
+use Laravel\Nova\Fields\HasMany;
 
 class Post extends Resource
 {
@@ -60,6 +61,7 @@ class Post extends Resource
             ]),
             //Text::make('Дата публикации','date_published'),
             Boolean::make('Статус размещения', 'status'), 
+            HasMany::make('Медиа контент', 'media', PostMedia::class),
         ];
     }
 

@@ -4,17 +4,19 @@ namespace App\Nova;
 
 use Illuminate\Http\Request;
 use Laravel\Nova\Fields\ID;
-use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Http\Requests\NovaRequest;
+use Laravel\Nova\Fields\Text;
+use Laravel\Nova\Fields\Boolean;
+use Laravel\Nova\Fields\Number;
 
-class SiteSetting extends Resource
+class ParsingChanelWord extends Resource
 {
     /**
      * The model the resource corresponds to.
      *
-     * @var class-string<\App\Models\SiteSetting>
+     * @var class-string<\App\Models\ParsingChanelWords>
      */
-    public static $model = \App\Models\SiteSetting::class;
+    public static $model = \App\Models\ParsingChanelWord::class;
 
     /**
      * The single value that should be used to represent the resource when being displayed.
@@ -29,7 +31,7 @@ class SiteSetting extends Resource
      * @var array
      */
     public static $search = [
-        'id',
+        'name',
     ];
 
     /**
@@ -42,11 +44,11 @@ class SiteSetting extends Resource
     {
         return [
             ID::make()->sortable(),
-            Text::make("site")->nullable(),
-            Text::make("title")->nullable(),
-            Text::make("description")->nullable(),
-            Text::make("image")->nullable(),
-            Text::make("date")->nullable(),
+            Text::make('name'),
+            Text::make('link'),
+            Number::make('Кол добаленых новостей','count_view'),
+            Number::make('Кол опубликованых постов','count_published_post'),
+            Boolean::make('Статус', 'status'), 
         ];
     }
 
@@ -93,10 +95,9 @@ class SiteSetting extends Resource
     {
         return [];
     }
-
     public static function label()
     {
-        return __('Парсинг сайтов');
+        return __('Каналы телеграм');
     }
 
     /**
@@ -106,8 +107,7 @@ class SiteSetting extends Resource
      */
     public static function singularLabel()
     {
-        return __('Настойка парсинга сайта');
+        return __('Канал телеграм');
     }
-
 
 }
