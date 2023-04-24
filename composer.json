@@ -16,6 +16,7 @@
         "laravel/sanctum": "^3.0",
         "laravel/tinker": "^2.7",
         "livewire/livewire": "^2.10",
+        "simonhamp/laravel-nova-csv-import": "^0.6.4",
         "simplehtmldom/simplehtmldom": "^2.0@RC"
     },
     "require-dev": {

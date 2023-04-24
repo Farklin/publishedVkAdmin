@@ -8,7 +8,7 @@ use Laravel\Nova\Http\Requests\NovaRequest;
 use Laravel\Nova\Fields\Text;
 use Laravel\Nova\Fields\Boolean;
 use Laravel\Nova\Fields\Number;
-
+use App\Nova\Actions\UploadTelegramChanels; 
 class ParsingChanelWord extends Resource
 {
     /**
@@ -93,7 +93,9 @@ class ParsingChanelWord extends Resource
      */
     public function actions(NovaRequest $request)
     {
-        return [];
+        return [
+            new UploadTelegramChanels
+        ];
     }
     public static function label()
     {

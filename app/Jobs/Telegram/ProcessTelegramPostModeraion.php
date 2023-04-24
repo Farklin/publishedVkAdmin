@@ -46,46 +46,58 @@ class ProcessTelegramPostModeraion implements ShouldQueue
         ]);
         foreach(config('telegram')['admins'] as $admin_id)
         {   
-            foreach($this->post->media as $media)
-            { 
-                if($media->format == 'image')
-                {   
-                    if(!empty($media->path))
-                    {
-                        Telegram::sendPhoto([
-                            'chat_id' => $admin_id, 
-                            'photo' => \Telegram\Bot\FileUpload\InputFile::create($media->path),
-                            'caption' => ''
-                        ]);
-                    }else 
-                    {
-                        Telegram::sendPhoto([
-                            'chat_id' => $admin_id, 
-                            'photo' => \Telegram\Bot\FileUpload\InputFile::create($media->url),
-                            'caption' => ''
-                        ]);
-                    }
-                  
-                   
-                }
-
-                if($media->format == 'video')
-                {
-                    Telegram::sendVideo([
-                        'chat_id' => $admin_id, 
-                        'video' => \Telegram\Bot\FileUpload\InputFile::create($media->path),
-                    ]);
-                }
-
+            $this->publishedMedia(); 
+            // проверяем есть ли медиа, если есть публикуем 
+            if($this->post->media()->exists())
+            {
+                Telegram::sendMessage([
+                    'chat_id' => $admin_id,
+                    'text' => $this->post->description,
+                    'reply_markup' => $inline_keyboard
+                ]);
             }
-        
-            
-            Telegram::sendMessage([
-                'chat_id' => $admin_id,
-                'text' => $this->post->description,
-                'reply_markup' => $inline_keyboard
-            ]);
+           
         }
        
+    }
+    
+    // прикрепляем медиа файллы 
+    public function publishedMedia() 
+    {
+       
+        foreach($this->post->media as $media)
+        { 
+
+            // если изображение 
+            if($media->format == 'image')
+            {   
+                if(!empty($media->path))
+                {
+                    Telegram::sendPhoto([
+                        'chat_id' => $admin_id, 
+                        'photo' => \Telegram\Bot\FileUpload\InputFile::create($media->path),
+                        'caption' => ''
+                    ]);
+                }else 
+                {
+                    Telegram::sendPhoto([
+                        'chat_id' => $admin_id, 
+                        'photo' => \Telegram\Bot\FileUpload\InputFile::create($media->url),
+                        'caption' => ''
+                    ]);
+                }
+            
+                
+            }
+            // если видео 
+            if($media->format == 'video')
+            {
+                Telegram::sendVideo([
+                    'chat_id' => $admin_id, 
+                    'video' => \Telegram\Bot\FileUpload\InputFile::create($media->path),
+                ]);
+            }
+
+        }
     }
 }

@@ -75,6 +75,8 @@ def callback(current, total):
 # posts = parsinJosn("http://firetecr.beget.tech/api/posts", 'description')
 
 key_word = parsinJosn("http://firetecr.beget.tech/api/words", 'word')
+posts = parsinJosn("http://firetecr.beget.tech/api/posts", 'description')
+
 
 def parsingChanel(title): 
  
@@ -94,10 +96,7 @@ def parsingChanel(title):
                 medias.append(ms.download_media(path_media))
 
         return medias
-
-
     
-
     result = []
 
     for ms in messages: 
@@ -107,6 +106,13 @@ def parsingChanel(title):
         el['message'] = ''
         el['media'] = [] 
         
+        flag_post_exists = False
+        for desc in posts: 
+            if desc[:30] == ms.message[:30]:
+                flag_post_exists = True
+                print('post exit to database')
+                break
+
         #проверка ключевых слов 
         flag = False 
         for key in key_word:
@@ -114,7 +120,7 @@ def parsingChanel(title):
                 flag = True
                 break
         
-        if flag:
+        if flag and not flag_post_exists:
             
             if ms.grouped_id != None and ms.message != '':
                 el['message'] = ms.message

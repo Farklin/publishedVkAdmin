@@ -69,7 +69,7 @@ class ProcessTelegramParsingChanel implements ShouldQueue
                             $media = $MadelineProto->download_to_dir($message,  public_path() . '/videos');
                             $images[] = $media;
                             // перебираем media
-                            Log::info($images); 
+                            
                             foreach ($images as $img) {
                                 if (isset($img)) {
                                     // получаем тип файла 
