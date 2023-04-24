@@ -82,9 +82,51 @@ Route::any('test', function () {
 });
 
 Route::get('/bot/get-update', function () {
-    $updates = Telegram::getUpdates();
-    $ids = []; 
-    
+    foreach(range(1, 18) as $second)
+    {   
+        $updates = Telegram::getUpdates();
+        $ids = []; 
+        
+       
+        foreach ($updates as $message)
+        {   
+            if(isset($message['callback_query']))
+            {    
+                // при возврате нажатии кнопки в телеграм 
+                
+                $calback = explode('|', $message['callback_query']['data']);
+                if(in_array($message['callback_query']['from']['id'], config('telegram')['admins'])) 
+                {
+                    if($calback[0] == 'published') 
+                    { 
+                        $post = Post::find($calback[1]);
+                        $post->moderation = 'published';
+                        $post->save();
+                    }
+                    if($calback[0] == 'banned') 
+                    { 
+                        $post = Post::find($calback[1]);
+                        $post->moderation = 'banned';
+                         $post->save();
+                    }
+        
+                    try{
+                        Telegram::editMessageReplyMarkup([
+                            'message_id' =>  $message['callback_query']['message']['message_id'],
+                            'chat_id' => $message['callback_query']['message']['chat']['id'], 
+                            'reply_markup' => '', 
+                        ]); 
+                    }
+                    catch(Exception $e){
+        
+                    }
+                }
+                
+            }
+        } 
+        sleep(3);
+    }
+
     // $inline_keyboard = json_encode([ //Потому что его объект
     //     'inline_keyboard' => [
     //         [
@@ -118,42 +160,7 @@ Route::get('/bot/get-update', function () {
     // $messageId = $response->getMessageId();  
 
     // return dd($messageId); 
-    foreach ($updates as $message)
-    {   
-        if(isset($message['callback_query']))
-        {    
-            // при возврате нажатии кнопки в телеграм 
-            
-            $calback = explode('|', $message['callback_query']['data']);
-            if(in_array($message['callback_query']['from']['id'], config('telegram')['admins'])) 
-            {
-                if($calback[0] == 'published') 
-                { 
-                    $post = Post::find($calback[1]);
-                    $post->moderation = 'published';
-                    $post->save();
-                }
-                if($calback[0] == 'banned') 
-                { 
-                    $post = Post::find($calback[1]);
-                    $post->moderation = 'banned';
-                     $post->save();
-                }
-    
-                try{
-                    Telegram::editMessageReplyMarkup([
-                        'message_id' =>  $message['callback_query']['message']['message_id'],
-                        'chat_id' => $message['callback_query']['message']['chat']['id'], 
-                        'reply_markup' => '', 
-                    ]); 
-                }
-                catch(Exception $e){
-    
-                }
-            }
-            
-        }
-    }
+  
   
     
     
@@ -178,7 +185,6 @@ Route::get('/bot/get-update', function () {
     
     // $messageId = $response->getMessageId();
 
-    return dd($updates); 
 });
 
 

@@ -12,6 +12,10 @@ use Illuminate\Queue\SerializesModels;
 use Illuminate\Support\Facades\Log;
 use Telegram\Bot\Laravel\Facades\Telegram;
 
+
+/**
+ * Отвечает за публикацию постов в телеграмме для прохождении модерации 
+ */
 class ProcessTelegramPostModeraion implements ShouldQueue
 {
     use Dispatchable, InteractsWithQueue, Queueable, SerializesModels;
@@ -46,7 +50,7 @@ class ProcessTelegramPostModeraion implements ShouldQueue
         ]);
         foreach(config('telegram')['admins'] as $admin_id)
         {   
-            $this->publishedMedia(); 
+            $this->publishedMedia($admin_id); 
             // проверяем есть ли медиа, если есть публикуем 
             if($this->post->media()->exists())
             {
@@ -62,7 +66,7 @@ class ProcessTelegramPostModeraion implements ShouldQueue
     }
     
     // прикрепляем медиа файллы 
-    public function publishedMedia() 
+    public function publishedMedia($admin_id) 
     {
        
         foreach($this->post->media as $media)
